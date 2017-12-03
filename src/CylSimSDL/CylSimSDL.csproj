@@ -75,7 +75,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Engine\Engine.csproj">
+    <ProjectReference Include="..\Engine\Engine.csproj">
       <Project>{831DEBBB-1430-4450-AEEB-981FA5E8E23A}</Project>
       <Name>Engine</Name>
     </ProjectReference>
@@ -85,5 +85,9 @@
     <PostBuildEvent>XCOPY /Y "$(SolutionDir)lib\SDL2\*.*" "$(TargetDir)"
 XCOPY /Y "$(SolutionDir)lib\SDL2_Image\*.*" "$(TargetDir)"
 </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>CALL "..\..\..\..\assets\generate.bat" "$(TargetDir)"
+</PreBuildEvent>
   </PropertyGroup>
 </Project>

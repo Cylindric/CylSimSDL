@@ -1,13 +1,10 @@
-﻿using Engine;
-
-namespace CylSimSDL
+﻿namespace CylSimSDL
 {
     static class Program
     {
         static void Main()
         {
-            var engine = new Engine.Engine();
-            engine.Run();
+            Engine.Engine.Instance.Run();
         }
     }
 }
