@@ -29,7 +29,7 @@ namespace Engine.Models
         /* #################################################################### */
         public SpriteSheet()
         {
-            _sprites = new Dictionary<string, Sprite>();
+            Sprites = new Dictionary<string, Sprite>();
         }
 
         /* #################################################################### */
@@ -41,7 +41,7 @@ namespace Engine.Models
         /* #################################################################### */
         public string Name { get; set; }
         public string SortingLayer { get; set; }
-        public Dictionary<string, Sprite> _sprites;
+        public Dictionary<string, Sprite> Sprites;
 
         /* #################################################################### */
         /* #                              METHODS                             # */
@@ -80,7 +80,7 @@ namespace Engine.Models
                     Py = data.pivotY
                 };
 
-                _sprites.Add(sprite.Name, sprite);
+                Sprites.Add(sprite.Name, sprite);
             }
         }
 

@@ -46,14 +46,14 @@ namespace Engine.Controllers
         /* #################################################################### */
         /* #                              METHODS                             # */
         /* #################################################################### */
-        public void Setup()
+        public void Start()
         {
             // Load the Spritesheet for the tiles
             var spritesheet = new SpriteSheet();
             spritesheet.Load(Engine.Instance.Path("assets", "base", "tiles", "floor.xml"));
 
-            FloorSprite = spritesheet._sprites.First().Value;
-            EmptySprite = spritesheet._sprites.First().Value;
+            FloorSprite = spritesheet.Sprites.First().Value;
+            EmptySprite = spritesheet.Sprites.First().Value;
 
             // Create a game object for every Tile.
             for (var x = 0; x < World.Instance.Width; x++)
@@ -108,6 +108,14 @@ namespace Engine.Controllers
 
             if (tileData.Type == TileType.Floor)
             {
+                var sr = tileGo.Sprite;
+                var x = tileData.X % 3;
+                var y = x + tileData.Y % 3;
+                var tile = (x + y) % 3;
+                sr.sprite = SpriteManager.Instance.GetSprite("tile_floor", $"floor_{tile}");
+                sr.enabled = true;
+
+
                 tileGo.Sprite = FloorSprite;
             }
             else if (tileData.Type == TileType.Empty)

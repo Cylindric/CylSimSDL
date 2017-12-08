@@ -32,7 +32,9 @@ namespace Engine.Models
         /* #################################################################### */
         /* #                            PROPERTIES                            # */
         /* #################################################################### */
+
         public SDLTexture Texture { get; set; }
+
         public string Name { get; internal set; }
 
         public int X
@@ -84,6 +86,7 @@ namespace Engine.Models
         }
 
         public float Px { get; internal set; }
+
         public float Py { get; internal set; }
 
         public SpriteClip Clip {

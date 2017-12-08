@@ -26,7 +26,7 @@ namespace EngineTests
             go.Position = new Vector2<float>(32, 32);
 
             go.SpriteSheet = spritesheet;
-            go.Sprite = spritesheet._sprites.First().Value;
+            go.Sprite = spritesheet.Sprites.First().Value;
             go.SpriteSheet.SortingLayer = "Tiles";
 
             SDLWindow.Instance.Update();

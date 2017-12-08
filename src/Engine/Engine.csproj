@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Controllers\CameraController.cs" />
     <Compile Include="Controllers\MouseController.cs" />
+    <Compile Include="Controllers\SpriteManager.cs" />
     <Compile Include="Models\Import\XmlSprite.cs" />
     <Compile Include="Models\Import\XmlTextureAtlas.cs" />
     <Compile Include="Models\Sprite.cs" />

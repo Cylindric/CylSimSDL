@@ -31,7 +31,7 @@ namespace Engine.Controllers
             Log.Instance.Debug("Creating empty world.");
             World.Instance.Generate(10, 10);
 
-            TileSpriteController.Instance.Setup();
+            TileSpriteController.Instance.Start();
 
             World.Instance.CreateCharacter(World.Instance.GetTileAt(World.Instance.Width / 2, World.Instance.Height / 2)); // First test character
 
@@ -43,7 +43,7 @@ namespace Engine.Controllers
             throw new NotImplementedException();
         }
 
-        public Tile GetTileAtWorldCoordinates(Vector3 coord)
+        public Tile GetTileAtWorldCoordinates(Vector2<float> coord)
         {
             var x = Mathf.FloorToInt(coord.X);
             var y = Mathf.FloorToInt(coord.Y);
