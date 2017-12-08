@@ -2,11 +2,12 @@
 using SDL2;
 using System;
 using System.Diagnostics;
+using Engine.Models;
 
 namespace Engine.Renderer.SDLRenderer
 {
     [DebuggerDisplay("SDLRenderer [{ptr}]")]
-    internal class SDLRenderer
+    internal class SDLRenderer : IDisposable
     {
         #region Singleton
         private static readonly Lazy<SDLRenderer> _instance = new Lazy<SDLRenderer>(() => new SDLRenderer());
@@ -37,15 +38,15 @@ namespace Engine.Renderer.SDLRenderer
         /* #################################################################### */
         /* #                            PROPERTIES                            # */
         /* #################################################################### */
-        public IntPtr ptr;
+        public IntPtr RenderPtr;
 
         /* #################################################################### */
         /* #                              METHODS                             # */
         /* #################################################################### */
         public void Start()
         {
-            ptr = SDL.SDL_CreateRenderer(SDLWindow.Instance.ptr, -1, 0);
-            if (ptr == null)
+            RenderPtr = SDL.SDL_CreateRenderer(SDLWindow.Instance.ptr, -1, 0);
+            if (RenderPtr == null)
             {
                 Log.Instance.Debug($"Failed to create renderer! SDL error: {SDL.SDL_GetError()}");
                 throw new InvalidOperationException(SDL.SDL_GetError());
@@ -54,12 +55,12 @@ namespace Engine.Renderer.SDLRenderer
 
         public void Clear()
         {
-            SDL.SDL_RenderClear(ptr);
+            SDL.SDL_RenderClear(RenderPtr);
         }
 
         public void Present()
         {
-            SDL.SDL_RenderPresent(ptr);
+            SDL.SDL_RenderPresent(RenderPtr);
         }
 
         #region IDisposable Support
@@ -74,7 +75,7 @@ namespace Engine.Renderer.SDLRenderer
                     // TODO: dispose managed state (managed objects).
                 }
 
-                SDL.SDL_DestroyRenderer(ptr);
+                SDL.SDL_DestroyRenderer(RenderPtr);
                 disposedValue = true;
             }
         }

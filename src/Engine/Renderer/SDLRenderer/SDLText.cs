@@ -1,22 +1,12 @@
-﻿using Engine.Controllers;
-using Engine.Models;
-using Engine.Renderer.SDLRenderer;
+﻿using Engine.Utilities;
+using SDL2;
 using System;
+using static SDL2.SDL;
 
-namespace Engine
+namespace Engine.Renderer.SDLRenderer
 {
-    public class Engine
+    internal class SDLText : IDisposable
     {
-        #region Singleton
-        private static readonly Lazy<Engine> _instance = new Lazy<Engine>(() => new Engine());
-
-        public static Engine Instance { get { return _instance.Value; } }
-
-        private Engine()
-        {
-        }
-        #endregion
-
         /* #################################################################### */
         /* #                         CONSTANT FIELDS                          # */
         /* #################################################################### */
@@ -24,6 +14,7 @@ namespace Engine
         /* #################################################################### */
         /* #                              FIELDS                              # */
         /* #################################################################### */
+        private SDLTexture _texture = new SDLTexture();
 
         /* #################################################################### */
         /* #                           CONSTRUCTORS                           # */
@@ -36,46 +27,53 @@ namespace Engine
         /* #################################################################### */
         /* #                            PROPERTIES                            # */
         /* #################################################################### */
-        public string AppPath
-        {
-            get { return AppDomain.CurrentDomain.BaseDirectory; }
-        }
+        public Vector2<int> Position { get; set; }
 
         /* #################################################################### */
         /* #                              METHODS                             # */
         /* #################################################################### */
 
-        public void Run()
+        public void Create(string text, string font, int size, SDL_Color colour)
         {
-            SDLWindow.Instance.Start();
-            SDLRenderer.Instance.Start();
+            var surface = SDL_ttf.TTF_RenderUTF8_Solid(SDLTtf.Instance.GetFont(font, size), text, colour);
+            _texture.CreateFromSurface(surface);
+            SDL.SDL_FreeSurface(surface);
+            Position = new Vector2<int>();
+        }
 
-            bool keepRunning = true;
-            while (keepRunning)
+        public void Render()
+        {
+            _texture.Render(Position);
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
             {
-                Time.Update();
-                SDLEvent.Update(); // This should be updated early, to make sure inputs are available to later activities.
-                SDLWindow.Instance.Update(); // This needs to be called before anything that might draw anything, as it clears the backbuffer.
-                MouseController.Instance.Update();
-                CameraController.Instance.Update();
-                WorldController.Instance.Update();
-
-                WorldController.Instance.Render();
-                MouseController.Instance.Render();
-                CameraController.Instance.Render();
-
-                SDLWindow.Instance.Present();
-
-                if (SDLEvent.Quit || SDLEvent.KeyUp(SDL2.SDL.SDL_Keycode.SDLK_ESCAPE))
+                if (disposing)
                 {
-                    keepRunning = false;
+                    // TODO: dispose managed state (managed objects).
                 }
+
+                disposedValue = true;
             }
         }
 
-        public string Path(params string[] parts)
+        ~SDLText()
         {
-            return System.IO.Path.Combine(AppPath, System.IO.Path.Combine(parts));
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(false);
         }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

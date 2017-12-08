@@ -1,9 +1,10 @@
-﻿using Engine.Renderer;
-using Engine.Renderer.SDLRenderer;
+﻿using Engine.Renderer.SDLRenderer;
 using Engine.Utilities;
+using System.Diagnostics;
 
 namespace Engine.Models
 {
+    [DebuggerDisplay("{Name} ({Width} × {Height})")]
     internal class Sprite
     {
         /* #################################################################### */
@@ -21,6 +22,7 @@ namespace Engine.Models
         public Sprite(SDLTexture texture)
         {
             Texture = texture;
+            Centered = false;
         }
 
         /* #################################################################### */
@@ -89,6 +91,8 @@ namespace Engine.Models
                 return _clip;
             }
         }
+
+        public bool Centered { get; internal set; }
 
         /* #################################################################### */
         /* #                              METHODS                             # */

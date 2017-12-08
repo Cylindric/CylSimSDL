@@ -29,13 +29,13 @@ namespace Engine.Controllers
         private void CreateEmptyWorld()
         {
             Log.Instance.Debug("Creating empty world.");
-            World.Instance.Generate(100, 100);
+            World.Instance.Generate(10, 10);
 
             TileSpriteController.Instance.Setup();
 
             World.Instance.CreateCharacter(World.Instance.GetTileAt(World.Instance.Width / 2, World.Instance.Height / 2)); // First test character
 
-            CameraController.Instance.Position = new Vector3(World.Instance.Width / 2f, World.Instance.Height / 2f, CameraController.Instance.Position.Z);
+            CameraController.Instance.Position = new Vector2<int>(World.Instance.Width / 2, World.Instance.Height / 2);
         }
 
         private void CreateWorldFromSave()

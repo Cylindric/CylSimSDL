@@ -17,7 +17,11 @@ namespace Engine.Renderer.SDLRenderer
         /* #################################################################### */
         /* #                              FIELDS                              # */
         /* #################################################################### */
-        public IntPtr ptr;
+        private IntPtr _texturePtr;
+        private int _width;
+        private int _height;
+        private uint _format;
+        private int _access;
 
         /* #################################################################### */
         /* #                           CONSTRUCTORS                           # */
@@ -37,6 +41,16 @@ namespace Engine.Renderer.SDLRenderer
         /* #################################################################### */
         /* #                              METHODS                             # */
         /* #################################################################### */
+        public void CreateFromSurface(IntPtr surface)
+        {
+            if(_texturePtr != IntPtr.Zero)
+            {
+                SDL_DestroyTexture(_texturePtr);
+            }
+            _texturePtr = SDL_CreateTextureFromSurface(SDLRenderer.Instance.RenderPtr, surface);
+            SDL_QueryTexture(_texturePtr, out _format, out _access, out _width, out _height);
+        }
+
         public void Load(string filename)
         {
             var surface = SDL_image.IMG_Load(filename);
@@ -46,12 +60,37 @@ namespace Engine.Renderer.SDLRenderer
                 throw new InvalidOperationException(SDL.SDL_GetError());
             }
 
-            ptr = SDL.SDL_CreateTextureFromSurface(SDLRenderer.Instance.ptr, surface);
+            _texturePtr = SDL.SDL_CreateTextureFromSurface(SDLRenderer.Instance.RenderPtr, surface);
             SDL.SDL_DestroyTexture(surface);
 
-            if(ptr == null)
+            if(_texturePtr == null)
             {
                 Log.Instance.Debug($"Failed to create texture! SDL error: {SDL.SDL_GetError()}");
+                throw new InvalidOperationException(SDL.SDL_GetError());
+            }
+        }
+
+        public void Render(Vector2<int> position)
+        {
+            SDL_Rect srcrect = new SDL_Rect()
+            {
+                x = 0,
+                y = 0,
+                w = _width,
+                h = _height
+            };
+
+            SDL_Rect dsrect = new SDL_Rect()
+            {
+                x = position.X,
+                y = position.Y,
+                w = _width,
+                h = _height
+            };
+
+            if (SDL.SDL_RenderCopy(SDLRenderer.Instance.RenderPtr, _texturePtr, ref srcrect, ref dsrect) < 0)
+            {
+                Log.Instance.Debug($"Failed to render texture! SDL error: {SDL.SDL_GetError()}");
                 throw new InvalidOperationException(SDL.SDL_GetError());
             }
         }
@@ -74,7 +113,7 @@ namespace Engine.Renderer.SDLRenderer
                 h = height
             };
 
-            if(SDL.SDL_RenderCopy(SDLRenderer.Instance.ptr, ptr, ref srcrect, ref dsrect) < 0)
+            if(SDL.SDL_RenderCopy(SDLRenderer.Instance.RenderPtr, _texturePtr, ref srcrect, ref dsrect) < 0)
             {
                 Log.Instance.Debug($"Failed to render texture! SDL error: {SDL.SDL_GetError()}");
                 throw new InvalidOperationException(SDL.SDL_GetError());
@@ -93,7 +132,7 @@ namespace Engine.Renderer.SDLRenderer
                     // TODO: dispose managed state (managed objects).
                 }
 
-                SDL.SDL_DestroyTexture(ptr);
+                SDL.SDL_DestroyTexture(_texturePtr);
                 disposedValue = true;
             }
         }

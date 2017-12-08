@@ -2,11 +2,12 @@
 using SDL2;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Engine.Renderer.SDLRenderer
 {
     [DebuggerDisplay("SDLWindow [{ptr}]")]
-    internal class SDLWindow
+    internal class SDLWindow : IDisposable
     {
         #region Singleton
         private static readonly Lazy<SDLWindow> _instance = new Lazy<SDLWindow>(() => new SDLWindow());
@@ -18,21 +19,31 @@ namespace Engine.Renderer.SDLRenderer
         }
         #endregion
 
-        private const int SCREEN_X = 100;
-        private const int SCREEN_Y = 100;
-        private const int SCREEN_WIDTH = 800;
-        private const int SCREEN_HEIGHT = 600;
+        private int _x = 100;
+        private int _y = 100;
+        private int _width = 800;
+        private int _height = 600;
 
         public IntPtr ptr;
 
         public void Start()
         {
+            Start(_x, _y, _width, _height);
+        }
+
+        public void Start(int x, int y, int w, int h)
+        {
+            _x = x;
+            _y = y;
+            _width = w;
+            _height = h;
+
             if(SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING)  < 0)
             {
                 Log.Instance.Debug($"Failed to initialise SDL! SDL error: {SDL.SDL_GetError()}");
                 throw new InvalidOperationException(SDL.SDL_GetError());
             }
-            ptr = SDL.SDL_CreateWindow("CylSim", SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT, SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+            ptr = SDL.SDL_CreateWindow("CylSim", _x, _y, _width, _height, SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
             if(ptr == null)
             {
                 Log.Instance.Debug($"Failed to create window! SDL error: {SDL.SDL_GetError()}");
@@ -45,9 +56,27 @@ namespace Engine.Renderer.SDLRenderer
             SDLRenderer.Instance.Clear();
         }
 
-        public void Render()
+        public void Present()
         {
             SDLRenderer.Instance.Present();
+        }
+
+        public void Screenshot(string filename)
+        {
+            var ssSurface = SDL.SDL_CreateRGBSurface(0, _width, _height, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+
+            var surface = Marshal.PtrToStructure<SDL.SDL_Surface>(ssSurface);
+            var rect = new SDL.SDL_Rect()
+            {
+                x = 0,
+                y = 0,
+                w = surface.w,
+                h = surface.h
+            };
+
+            SDL.SDL_RenderReadPixels(SDLRenderer.Instance.RenderPtr, ref rect, SDL.SDL_PIXELFORMAT_ARGB8888, surface.pixels, surface.pitch);
+            SDL.SDL_SaveBMP(ssSurface, filename);
+            SDL.SDL_FreeSurface(ssSurface);
         }
 
         #region IDisposable Support

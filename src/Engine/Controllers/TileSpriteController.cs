@@ -21,7 +21,7 @@ namespace Engine.Controllers
         /* #################################################################### */
         /* #                         CONSTANT FIELDS                          # */
         /* #################################################################### */
-        const int GRID_SIZE = 64;
+        public const int GRID_SIZE = 64;
 
         /* #################################################################### */
         /* #                              FIELDS                              # */
@@ -64,11 +64,11 @@ namespace Engine.Controllers
                     var tileGo = new GameObject();
                     _tileGameObjectMap.Add(tileData, tileGo);
 
-                    tileGo.name = "Tile_" + x + "_" + y;
-                    tileGo.position = new Vector3(tileData.X, tileData.Y, 0);
+                    tileGo.Name = "Tile_" + x + "_" + y;
+                    tileGo.Position = new Vector2<float>(tileData.X, tileData.Y);
 
                     tileGo.SpriteSheet = spritesheet;
-                    tileGo.sprite = EmptySprite;
+                    tileGo.Sprite = EmptySprite;
                     tileGo.SpriteSheet.SortingLayer = "Tiles";
 
                     OnTileChanged(tileData);
@@ -108,11 +108,11 @@ namespace Engine.Controllers
 
             if (tileData.Type == TileType.Floor)
             {
-                tileGo.sprite = FloorSprite;
+                tileGo.Sprite = FloorSprite;
             }
             else if (tileData.Type == TileType.Empty)
             {
-                tileGo.sprite = EmptySprite;
+                tileGo.Sprite = EmptySprite;
             }
             else
             {
@@ -125,24 +125,20 @@ namespace Engine.Controllers
             foreach(var t in _tileGameObjectMap)
             {
                 var go = t.Value;
-                var posX = go.position.X * GRID_SIZE;
-                var posY = go.position.Y * GRID_SIZE;
 
-                if (go.position.X == 0 && go.position.Y == 0)
+                if(go.Sprite == null)
                 {
-                    //Log.Instance.Debug($"Tile 0,0 is going to be drawn at world coordinate {posX},{posY}.");
+                    continue;
                 }
+
+                var posX = go.Position.X * GRID_SIZE;
+                var posY = go.Position.Y * GRID_SIZE;
 
                 // offset render location by the camera movement
                 posX -= CameraController.Instance.Position.X;
                 posY += CameraController.Instance.Position.Y;
 
-                if (go.position.X == 0 && go.position.Y == 0)
-                {
-                    Log.Instance.Debug($"Tile 0,0 is going to be drawn at screen coordinate {posX},{posY}.");
-                }
-
-                t.Value.SpriteSheet.Render(go.sprite, (int)posX, (int)posY, go.sprite.Width, go.sprite.Height);
+                t.Value.SpriteSheet.Render(go.Sprite, (int)posX, (int)posY);
             }
         }
 

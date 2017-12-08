@@ -7,7 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CylSimSDL", "CylSimSDL\CylS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csproj", "{831DEBBB-1430-4450-AEEB-981FA5E8E23A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EngineTests", "EngineTests\EngineTests.csproj", "{E53223E3-EE19-4493-9C55-BFD86316BF40}"
+EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -21,6 +26,10 @@ Global
 		{831DEBBB-1430-4450-AEEB-981FA5E8E23A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{831DEBBB-1430-4450-AEEB-981FA5E8E23A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{831DEBBB-1430-4450-AEEB-981FA5E8E23A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E53223E3-EE19-4493-9C55-BFD86316BF40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E53223E3-EE19-4493-9C55-BFD86316BF40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E53223E3-EE19-4493-9C55-BFD86316BF40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E53223E3-EE19-4493-9C55-BFD86316BF40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

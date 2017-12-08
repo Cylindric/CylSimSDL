@@ -1,19 +1,19 @@
-﻿using Engine.Controllers;
-using Engine.Models;
-using Engine.Renderer.SDLRenderer;
+﻿using SDL2;
 using System;
+using System.Collections.Generic;
 
-namespace Engine
+namespace Engine.Renderer.SDLRenderer
 {
-    public class Engine
+    internal class SDLTtf
     {
         #region Singleton
-        private static readonly Lazy<Engine> _instance = new Lazy<Engine>(() => new Engine());
+        private static readonly Lazy<SDLTtf> _instance = new Lazy<SDLTtf>(() => new SDLTtf());
 
-        public static Engine Instance { get { return _instance.Value; } }
+        public static SDLTtf Instance { get { return _instance.Value; } }
 
-        private Engine()
+        private SDLTtf()
         {
+            SDL_ttf.TTF_Init();
         }
         #endregion
 
@@ -24,6 +24,8 @@ namespace Engine
         /* #################################################################### */
         /* #                              FIELDS                              # */
         /* #################################################################### */
+
+        private readonly Dictionary<string, IntPtr> _fonts = new Dictionary<string, IntPtr>();
 
         /* #################################################################### */
         /* #                           CONSTRUCTORS                           # */
@@ -36,46 +38,56 @@ namespace Engine
         /* #################################################################### */
         /* #                            PROPERTIES                            # */
         /* #################################################################### */
-        public string AppPath
-        {
-            get { return AppDomain.CurrentDomain.BaseDirectory; }
-        }
 
         /* #################################################################### */
         /* #                              METHODS                             # */
         /* #################################################################### */
 
-        public void Run()
+        public IntPtr GetFont(string name, int size)
         {
-            SDLWindow.Instance.Start();
-            SDLRenderer.Instance.Start();
-
-            bool keepRunning = true;
-            while (keepRunning)
+            var key = $"{name}__{size}";
+            if (!_fonts.ContainsKey(key))
             {
-                Time.Update();
-                SDLEvent.Update(); // This should be updated early, to make sure inputs are available to later activities.
-                SDLWindow.Instance.Update(); // This needs to be called before anything that might draw anything, as it clears the backbuffer.
-                MouseController.Instance.Update();
-                CameraController.Instance.Update();
-                WorldController.Instance.Update();
+                var font = SDL_ttf.TTF_OpenFont(Engine.Instance.Path("assets", "base", "fonts", $"{name}.ttf"), size);
+                _fonts.Add(key, font);
+            }
+            return _fonts[key];
+        }
 
-                WorldController.Instance.Render();
-                MouseController.Instance.Render();
-                CameraController.Instance.Render();
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
 
-                SDLWindow.Instance.Present();
-
-                if (SDLEvent.Quit || SDLEvent.KeyUp(SDL2.SDL.SDL_Keycode.SDLK_ESCAPE))
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
                 {
-                    keepRunning = false;
+                    // TODO: dispose managed state (managed objects).
                 }
+
+                foreach (var font in _fonts)
+                {
+                    SDL_ttf.TTF_CloseFont(font.Value);
+                }
+
+                SDL_ttf.TTF_Quit();
+                disposedValue = true;
             }
         }
 
-        public string Path(params string[] parts)
+        ~SDLTtf()
         {
-            return System.IO.Path.Combine(AppPath, System.IO.Path.Combine(parts));
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(false);
         }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

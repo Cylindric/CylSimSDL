@@ -17,6 +17,9 @@ MD %BASEOUTPUTPATH%
 SET OUTPUTPATH=%BASEOUTPUTPATH%\characters
 %TP% %OPTIONS% --data %OUTPUTPATH%\colonist.xml --sheet %OUTPUTPATH%\colonist.png characters\colonist-assets
 
+SET OUTPUTPATH=%BASEOUTPUTPATH%\cursors
+%TP% %OPTIONS% --data %OUTPUTPATH%\cursors.xml --sheet %OUTPUTPATH%\cursors.png Cursors\cursor-assets
+
 SET OUTPUTPATH=%BASEOUTPUTPATH%\furniture
 %TP% %OPTIONS% --data %OUTPUTPATH%\furn_wall_steel.xml --sheet %OUTPUTPATH%\furn_wall_steel.png furniture\furn_wall_steel-assets
 %TP% %OPTIONS% --data %OUTPUTPATH%\furn_door_heavy.xml --sheet %OUTPUTPATH%\furn_door_heavy.png furniture\furn_door_heavy-assets
@@ -32,4 +35,9 @@ SET OUTPUTPATH=%BASEOUTPUTPATH%\tiles
 MD %OUTPUTPATH%
 %TP% %OPTIONS% --data %OUTPUTPATH%\floor.xml --sheet %OUTPUTPATH%\floor.png Tiles\floor-assets
 
-
+REM ###########################################################################
+REM Fonts
+REM ###########################################################################
+SET OUTPUTPATH=%BASEOUTPUTPATH%\fonts
+MD %OUTPUTPATH%
+XCOPY /Y Fonts\*.ttf %OUTPUTPATH%

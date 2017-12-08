@@ -84,6 +84,7 @@
   <PropertyGroup>
     <PostBuildEvent>XCOPY /Y "$(SolutionDir)lib\SDL2\*.*" "$(TargetDir)"
 XCOPY /Y "$(SolutionDir)lib\SDL2_Image\*.*" "$(TargetDir)"
+XCOPY /Y "$(SolutionDir)lib\SDL2_ttf\*.*" "$(TargetDir)"
 </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

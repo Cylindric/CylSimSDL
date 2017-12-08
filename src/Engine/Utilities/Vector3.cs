@@ -1,32 +1,19 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Engine.Utilities
 {
     [DebuggerDisplay("Vector3 [{X},{Y},{Z}]")]
-    public class Vector3
+    public struct Vector3
     {
         public float X { get; set; }
         public float Y { get; set; }
         public float Z { get; set; }
-
-        public Vector3()
-        {
-
-        }
 
         public Vector3(float x, float y, float z)
         {
             X = x;
             Y = y;
             Z = z;
-        }
-
-        public Vector3(float x, float y)
-        {
-            X = x;
-            Y = y;
-            Z = 0;
         }
 
         /// <summary>

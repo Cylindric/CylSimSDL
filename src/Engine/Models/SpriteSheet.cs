@@ -2,14 +2,17 @@
 using Engine.Renderer.SDLRenderer;
 using Engine.Utilities;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
+using System;
 
 namespace Engine.Models
 {
     /// <summary>
     /// Represents an image containing one or more individual sprites.
     /// </summary>
+    [DebuggerDisplay("{Name}")]
     internal class SpriteSheet
     {
         /* #################################################################### */
@@ -81,8 +84,27 @@ namespace Engine.Models
             }
         }
 
-        public void Render(Sprite sprite, int x, int y, int width, int height)
+        /// <summary>
+        /// Render the given sprite at the specified screen location and size.
+        /// </summary>
+        /// <param name="sprite">The sprite to render.</param>
+        /// <param name="screenPos">The screen-coordinate to render at.</param>
+        /// <param name="width">The width to render the sprite.</param>
+        /// <param name="height">The height to render the sprite.</param>
+        internal void Render(Sprite sprite, Vector2<int> screenPos)
         {
+            Render(sprite, screenPos.X, screenPos.Y);
+        }
+
+        public void Render(Sprite sprite, int x, int y)
+        {
+            if (sprite.Centered)
+            {
+                x = x - (sprite.Width / 2);
+                y = y - (sprite.Width / 2);
+            }
+            int width = sprite.Width;
+            int height = sprite.Height;
             _texture.RenderSprite(sprite, x, y, width, height);
         }
     }
